@@ -10,7 +10,7 @@ header {
     background-color: #2c3e50;
     color: white;
     padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 nav {
@@ -71,7 +71,7 @@ main {
     margin: 20px auto;
     padding: 20px;
     background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
 }
 
@@ -80,7 +80,8 @@ section {
     text-align: center;
 }
 
-section h1, section h2 {
+section h1,
+section h2 {
     color: #2c3e50;
     margin-bottom: 20px;
 }
@@ -124,13 +125,14 @@ form {
     background-color: #f9f9f9;
     padding: 30px;
     border-radius: 8px;
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
     max-width: 600px;
     margin: 30px auto;
     text-align: left;
 }
 
-form h3, form h4 {
+form h3,
+form h4 {
     color: #2c3e50;
     margin-bottom: 20px;
     text-align: center;
@@ -205,27 +207,36 @@ footer {
 
 /* Modal Styling */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 10% auto; /* 10% from the top and centered */
+    margin: 10% auto;
+    /* 10% from the top and centered */
     padding: 30px;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    width: 80%;
+    /* Could be more or less, depending on screen size */
     max-width: 500px;
     border-radius: 10px;
     position: relative;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     text-align: left;
 }
 
@@ -256,16 +267,123 @@ footer {
     nav {
         flex-direction: column;
     }
+
     nav ul {
         margin-top: 15px;
     }
+
     nav ul li {
         margin: 0 10px;
     }
+
     .hero h1 {
         font-size: 2.2rem;
     }
+
     .hero p {
         font-size: 1rem;
     }
+}
+
+.quiz-section {
+    text-align: center;
+}
+
+.quiz-selection {
+    margin-bottom: 30px;
+}
+
+.quiz-select-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.quiz-select-btn:hover {
+    background-color: #2980b9;
+}
+
+.quiz-container {
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+    max-width: 700px;
+    margin: 30px auto;
+    text-align: left;
+}
+
+.quiz-container h3 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+.question-block {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.question-block p {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.question-block label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.question-block input[type="radio"] {
+    margin-right: 10px;
+}
+
+.quiz-result {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #d1ecf1;
+    background-color: #dbeffc;
+    color: #0c5460;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.quiz-result h4 {
+    color: #0c5460;
+    margin-top: 0;
+    text-align: center;
+}
+
+.quiz-result p {
+    margin-bottom: 5px;
+}
+
+.quiz-result .cta-button {
+    margin-top: 20px;
+    width: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ensure the readiness-result style applies */
+.readiness-result {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #d4edda;
+    background-color: #e6ffed;
+    color: #155724;
+    border-radius: 8px;
+    text-align: left;
 }

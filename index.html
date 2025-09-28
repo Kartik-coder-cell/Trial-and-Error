@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Placement Readiness Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <nav>
@@ -13,6 +15,7 @@
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#quizzes">Quizzes</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact Us</a></li>
                 <li><a href="#help">Help</a></li>
@@ -48,22 +51,22 @@
                 <label for="expertiseQuiz">Expertise Quiz Score (out of 100):</label>
                 <input type="number" id="expertiseQuiz" min="0" max="100" required>
 
-                <label for="communicationQuiz">Communication Quiz Score (out of 100):</label>
-                <input type="number" id="communicationQuiz" min="0" max="100" required>
+                <label for="communicationQuizInput">Communication Quiz Score (out of 100):</label>
+                <input type="number" id="communicationQuizInput" min="0" max="100" required>
 
                 <label for="dsaTopicsCovered">DSA Topics Covered (e.g., Arrays, Trees, Graphs):</label>
                 <input type="text" id="dsaTopicsCovered" placeholder="Comma separated values">
 
-                <label for="dsaQuiz">DSA Quiz Score (out of 100):</label>
-                <input type="number" id="dsaQuiz" min="0" max="100" required>
+                <label for="dsaQuizInput">DSA Quiz Score (out of 100):</label>
+                <input type="number" id="dsaQuizInput" min="0" max="100" required>
 
-                <label for="aptitudeTest">Aptitude Test Score (out of 100):</label>
-                <input type="number" id="aptitudeTest" min="0" max="100" required>
+                <label for="aptitudeTestInput">Aptitude Test Score (out of 100):</label>
+                <input type="number" id="aptitudeTestInput" min="0" max="100" required>
 
                 <button type="submit">Calculate Readiness</button>
             </form>
 
-            <div id="readinessResult" class="hidden">
+            <div id="readinessResult" class="hidden readiness-result">
                 <h3>Placement Readiness Report for <span id="reportStudentName"></span>:</h3>
                 <p>Overall Readiness: <strong id="overallReadiness"></strong></p>
                 <p>Areas for Improvement: <span id="improvementAreas"></span></p>
@@ -72,6 +75,29 @@
                     <p>Aptitude: <span id="resultAptitude"></span></p>
                     <p>DSA: <span id="resultDSA"></span></p>
                     <p>Communication: <span id="resultCommunication"></span></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quizzes" class="hidden quiz-section">
+            <h2>Take a Quiz</h2>
+            <div class="quiz-selection">
+                <button class="quiz-select-btn" data-quiz="communication">Communication Quiz</button>
+                <button class="quiz-select-btn" data-quiz="aptitude">Aptitude Quiz</button>
+                <button class="quiz-select-btn" data-quiz="dsa">DSA Quiz</button>
+            </div>
+
+            <div id="quizContainer" class="quiz-container hidden">
+                <h3 id="quizTitle"></h3>
+                <div id="quizQuestions">
+                </div>
+                <button id="submitQuizBtn" class="cta-button hidden">Submit Quiz</button>
+                <div id="quizResult" class="quiz-result hidden">
+                    <h4>Quiz Result for <span id="resultQuizName"></span></h4>
+                    <p>Correct Answers: <span id="correctAnswers"></span> / 10</p>
+                    <p>Wrong Answers: <span id="wrongAnswers"></span> / 10</p>
+                    <p>Remarks: <span id="quizRemarks"></span></p>
+                    <button class="cta-button" onclick="location.reload()">Take Another Quiz</button>
                 </div>
             </div>
         </section>
@@ -134,4 +160,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
