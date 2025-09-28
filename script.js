@@ -1,16 +1,46 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- General DOM Elements ---
     const navLinks = document.querySelectorAll('nav ul li a');
     const sections = document.querySelectorAll('main section');
+    const ctaButton = document.querySelector('.cta-button');
+
+    // --- Modal Elements ---
     const loginBtn = document.getElementById('loginBtn');
     const signupBtn = document.getElementById('signupBtn');
     const loginModal = document.getElementById('loginModal');
     const signupModal = document.getElementById('signupModal');
-    const closeButtons = document.querySelectorAll('.close-button');
+    const closeButtons = document.querySelectorAll('.modal .close-button'); // Selects close buttons within modals
+
+    // --- Login Form Elements ---
+    const loginForm = document.getElementById('loginForm');
+    const loginEmailInput = document.getElementById('loginEmail');
+    const loginPasswordInput = document.getElementById('loginPassword');
+    const loginEmailError = document.getElementById('loginEmailError');
+    const loginPasswordError = document.getElementById('loginPasswordError');
+
+    // --- Signup Form Elements ---
+    const signupForm = document.getElementById('signupForm');
+    const signupNameInput = document.getElementById('signupName');
+    const signupEmailInput = document.getElementById('signupEmail');
+    const signupPasswordInput = document.getElementById('signupPassword');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const signupNameError = document.getElementById('signupNameError');
+    const signupEmailError = document.getElementById('signupEmailError');
+    const signupPasswordError = document.getElementById('signupPasswordError');
+    const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+    // --- Dashboard Elements ---
     const studentDataForm = document.getElementById('studentDataForm');
     const readinessResultDiv = document.getElementById('readinessResult');
-    const ctaButton = document.querySelector('.cta-button');
+    const reportStudentName = document.getElementById('reportStudentName');
+    const overallReadiness = document.getElementById('overallReadiness');
+    const improvementAreas = document.getElementById('improvementAreas');
+    const resultCGPA = document.getElementById('resultCGPA');
+    const resultAptitude = document.getElementById('resultAptitude');
+    const resultDSA = document.getElementById('resultDSA');
+    const resultCommunication = document.getElementById('resultCommunication');
 
-    // Quiz elements
+    // --- Quiz Elements ---
     const quizSelectBtns = document.querySelectorAll('.quiz-select-btn');
     const quizContainer = document.getElementById('quizContainer');
     const quizTitle = document.getElementById('quizTitle');
@@ -24,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentQuizQuestions = []; // Stores questions for the active quiz
 
-    // Quiz Data (10 questions each)
+    // --- Quiz Data (10 questions each) ---
     const quizzes = {
         communication: {
             name: "Communication Quiz",
@@ -61,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             questions: [
                 { question: "Which data structure uses LIFO (Last In, First Out) principle?", options: ["Queue", "Stack", "Linked List", "Tree"], answer: "Stack" },
                 { question: "What is the time complexity of searching an element in a sorted array using Binary Search?", options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"], answer: "O(log n)" },
-                { question: "Which of the following is NOT a type of tree traversal?", options: ["Inorder", "Preorder", "Postorder", "Depth-first"], answer: "Depth-first" }, // DFS is a category, not a specific traversal name like in,pre,postorder
+                { question: "Which of the following is NOT a type of tree traversal?", options: ["Inorder", "Preorder", "Postorder", "Depth-first"], answer: "Depth-first" },
                 { question: "What is the worst-case time complexity of QuickSort?", options: ["O(n log n)", "O(n^2)", "O(log n)", "O(n)"], answer: "O(n^2)" },
                 { question: "A 'doubly linked list' allows traversal in:", options: ["Forward direction only", "Backward direction only", "Both forward and backward directions", "Random access direction"], answer: "Both forward and backward directions" },
                 { question: "Which algorithm finds the shortest path from a single source vertex to all other vertices in a graph with non-negative edge weights?", options: ["Bellman-Ford", "Floyd-Warshall", "Dijkstra's", "Prim's"], answer: "Dijkstra's" },
@@ -73,7 +103,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Function to show a specific section and hide others
+    // --- Utility Functions ---
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Generic validation function
+    function validateInput(inputElement, errorElement, validationFn, errorMessage) {
+        const value = inputElement.value.trim();
+        let isValid = true;
+        let message = '';
+
+        if (inputElement.hasAttribute('required') && value === '') {
+            isValid = false;
+            message = 'This field is mandatory.';
+        } else if (!validationFn(value)) {
+            isValid = false;
+            message = errorMessage;
+        }
+
+        errorElement.textContent = message;
+        if (isValid) {
+            inputElement.classList.remove('is-invalid');
+        } else {
+            inputElement.classList.add('is-invalid');
+        }
+        return isValid;
+    }
+
+    // Password strength check for signup
+    const isPasswordStrong = (value) => {
+        return value.length >= 8 &&
+               /[A-Z]/.test(value) &&    // At least one uppercase
+               /[a-z]/.test(value) &&    // At least one lowercase
+               /[0-9]/.test(value);      // At least one number
+    };
+
+    // --- Section Navigation ---
     const showSection = (id) => {
         sections.forEach(section => {
             if (section.id === id) {
@@ -82,84 +147,121 @@ document.addEventListener('DOMContentLoaded', () => {
                 section.classList.add('hidden');
             }
         });
-        // Scroll to the top of the main content area
         document.querySelector('main').scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Handle navigation clicks
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const targetId = link.getAttribute('href').substring(1); // Remove '#'
+            const targetId = link.getAttribute('href').substring(1);
             showSection(targetId);
-            // If navigating away from quiz, hide quiz container
+            // Hide quiz elements when navigating away from quizzes
             if (targetId !== 'quizzes') {
                 quizContainer.classList.add('hidden');
                 quizResultDiv.classList.add('hidden');
-                quizQuestionsDiv.innerHTML = ''; // Clear previous questions
+                quizQuestionsDiv.innerHTML = '';
                 submitQuizBtn.classList.add('hidden');
             }
         });
     });
 
-    // Handle CTA button click on home page
     if (ctaButton) {
         ctaButton.addEventListener('click', () => {
             showSection('dashboard');
         });
     }
 
-    // Modal functionality (Login/Signup) - Same as before
-    loginBtn.addEventListener('click', () => {
-        loginModal.classList.remove('hidden');
-    });
+    // --- Modal Logic (Open/Close) ---
+    const openModal = (modalElement) => {
+        modalElement.classList.remove('hidden');
+        modalElement.style.display = 'flex'; // Ensure flex for centering
+        clearAuthErrors(); // Clear errors on opening a modal
+    };
 
-    signupBtn.addEventListener('click', () => {
-        signupModal.classList.remove('hidden');
-    });
+    const closeModal = (modalElement) => {
+        modalElement.classList.add('hidden');
+        modalElement.style.display = 'none';
+        clearAuthErrors(); // Clear errors on closing a modal
+    };
+
+    loginBtn.addEventListener('click', () => openModal(loginModal));
+    signupBtn.addEventListener('click', () => openModal(signupModal));
 
     closeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            loginModal.classList.add('hidden');
-            signupModal.classList.add('hidden');
+        button.addEventListener('click', (e) => {
+            const parentModal = e.target.closest('.modal');
+            if (parentModal) closeModal(parentModal);
         });
     });
 
     window.addEventListener('click', (event) => {
-        if (event.target == loginModal) {
-            loginModal.classList.add('hidden');
+        if (event.target === loginModal) {
+            closeModal(loginModal);
         }
-        if (event.target == signupModal) {
-            signupModal.classList.add('hidden');
+        if (event.target === signupModal) {
+            closeModal(signupModal);
         }
     });
 
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        console.log('Login attempt:', { email, password });
-        alert('Login functionality is for demo purposes. No actual login is performed.');
-        loginModal.classList.add('hidden');
+    // --- Login Form Functionality ---
+    loginEmailInput.addEventListener('input', () => {
+        validateInput(loginEmailInput, loginEmailError, (value) => emailRegex.test(value), 'Please enter a valid email address.');
+    });
+    loginPasswordInput.addEventListener('input', () => {
+        validateInput(loginPasswordInput, loginPasswordError, (value) => value.length > 0, 'Password cannot be empty.');
     });
 
-    document.getElementById('signupForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById('signupName').value;
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // Crucial: Stop default form submission
 
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
-            return;
+        // Run all validations and store their results
+        const isEmailValid = validateInput(loginEmailInput, loginEmailError, (value) => emailRegex.test(value), 'Please enter a valid email address.');
+        const isPasswordValid = validateInput(loginPasswordInput, loginPasswordError, (value) => value.length > 0, 'Password cannot be empty.');
+
+        if (isEmailValid && isPasswordValid) {
+            console.log('Login successful! (Demo only)');
+            alert('Login successful! Welcome!');
+            closeModal(loginModal);
+        } else {
+            console.log('Login validation failed.');
         }
-        console.log('Signup attempt:', { name, email, password });
-        alert('Signup functionality is for demo purposes. No actual registration is performed.');
-        signupModal.classList.add('hidden');
     });
 
-    // Handle student data form submission - Slight changes to input IDs
+    // --- Signup Form Functionality ---
+    signupNameInput.addEventListener('input', () => {
+        validateInput(signupNameInput, signupNameError, (value) => value.length >= 2, 'Name must be at least 2 characters.');
+    });
+    signupEmailInput.addEventListener('input', () => {
+        validateInput(signupEmailInput, signupEmailError, (value) => emailRegex.test(value), 'Please enter a valid email address.');
+    });
+    signupPasswordInput.addEventListener('input', () => {
+        validateInput(signupPasswordInput, signupPasswordError, isPasswordStrong, 'Password must be at least 8 chars, incl. uppercase, lowercase, and a number.');
+        // Re-validate confirm password if main password changes
+        validateInput(confirmPasswordInput, confirmPasswordError, (value) => value === signupPasswordInput.value && value.length > 0, 'Passwords do not match.');
+    });
+    confirmPasswordInput.addEventListener('input', () => {
+        validateInput(confirmPasswordInput, confirmPasswordError, (value) => value === signupPasswordInput.value && value.length > 0, 'Passwords do not match.');
+    });
+
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // Crucial: Stop default form submission
+
+        // Run all validations and store their results
+        const isNameValid = validateInput(signupNameInput, signupNameError, (value) => value.length >= 2, 'Name must be at least 2 characters.');
+        const isEmailValid = validateInput(signupEmailInput, signupEmailError, (value) => emailRegex.test(value), 'Please enter a valid email address.');
+        const isPasswordValid = validateInput(signupPasswordInput, signupPasswordError, isPasswordStrong, 'Password must be at least 8 chars, incl. uppercase, lowercase, and a number.');
+        const isConfirmPasswordValid = validateInput(confirmPasswordInput, confirmPasswordError, (value) => value === signupPasswordInput.value && value.length > 0, 'Passwords do not match.');
+
+        if (isNameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
+            console.log('Signup successful! (Demo only)');
+            alert('Signup successful! Welcome!');
+            closeModal(signupModal);
+        } else {
+            console.log('Signup validation failed.');
+        }
+    });
+
+    // --- Student Dashboard Form Functionality (unchanged) ---
     studentDataForm.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -167,13 +269,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const yearOfStudy = parseInt(document.getElementById('yearOfStudy').value);
         const cgpa = parseFloat(document.getElementById('cgpa').value);
         const expertiseQuiz = parseInt(document.getElementById('expertiseQuiz').value);
-        // Updated input IDs for consistency with the new quiz feature
         const communicationQuizScore = parseInt(document.getElementById('communicationQuizInput').value);
         const dsaTopicsCovered = document.getElementById('dsaTopicsCovered').value;
         const dsaQuizScore = parseInt(document.getElementById('dsaQuizInput').value);
         const aptitudeTestScore = parseInt(document.getElementById('aptitudeTestInput').value);
 
-        // --- Placement Readiness Logic ---
         let readinessScore = 0;
         let improvementFactors = [];
 
@@ -210,30 +310,28 @@ document.addEventListener('DOMContentLoaded', () => {
             overallReadinessText = '<span style="color: red; font-weight: bold;">Needs significant improvement.</span>';
         }
 
-        document.getElementById('reportStudentName').textContent = studentName;
-        document.getElementById('overallReadiness').innerHTML = `${overallReadinessText} (Score: ${readinessScore.toFixed(2)}/100)`;
-        document.getElementById('improvementAreas').textContent = improvementFactors.length > 0 ? improvementFactors.join(', ') : 'None';
-        document.getElementById('resultCGPA').textContent = `${cgpa} (${normalizedCGPA.toFixed(1)}%)`;
-        document.getElementById('resultAptitude').textContent = `${aptitudeTestScore}%`;
-        document.getElementById('resultDSA').textContent = `${dsaQuizScore}% (Topics: ${dsaTopicsCovered || 'N/A'})`;
-        document.getElementById('resultCommunication').textContent = `${communicationQuizScore}%`;
+        reportStudentName.textContent = studentName;
+        overallReadiness.innerHTML = `${overallReadinessText} (Score: ${readinessScore.toFixed(2)}/100)`;
+        improvementAreas.textContent = improvementFactors.length > 0 ? improvementFactors.join(', ') : 'None';
+        resultCGPA.textContent = `${cgpa} (${normalizedCGPA.toFixed(1)}%)`;
+        resultAptitude.textContent = `${aptitudeTestScore}%`;
+        resultDSA.textContent = `${dsaQuizScore}% (Topics: ${dsaTopicsCovered || 'N/A'})`;
+        resultCommunication.textContent = `${communicationQuizScore}%`;
 
         readinessResultDiv.classList.remove('hidden');
         readinessResultDiv.scrollIntoView({ behavior: 'smooth' });
     });
 
-    // --- Quiz Functionality ---
-
-    // Load a specific quiz
+    // --- Quiz Functionality (unchanged) ---
     const loadQuiz = (quizType) => {
         const quizData = quizzes[quizType];
         if (!quizData) return;
 
         currentQuizQuestions = quizData.questions;
         quizTitle.textContent = quizData.name;
-        quizQuestionsDiv.innerHTML = ''; // Clear previous questions
-        quizResultDiv.classList.add('hidden'); // Hide result section
-        submitQuizBtn.classList.remove('hidden'); // Show submit button
+        quizQuestionsDiv.innerHTML = '';
+        quizResultDiv.classList.add('hidden');
+        submitQuizBtn.classList.remove('hidden');
 
         currentQuizQuestions.forEach((q, index) => {
             const questionBlock = document.createElement('div');
@@ -255,7 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
         quizContainer.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Handle quiz selection button clicks
     quizSelectBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const quizType = e.target.dataset.quiz;
@@ -263,7 +360,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Handle quiz submission
     submitQuizBtn.addEventListener('click', () => {
         let correctCount = 0;
         let wrongCount = 0;
@@ -278,12 +374,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     wrongCount++;
                 }
             } else {
-                // If no option is selected, it's considered wrong
-                wrongCount++;
+                wrongCount++; // Count unanswered as wrong
             }
         });
 
-        // Calculate score out of 100 for a 10 question quiz
         const scorePercentage = (correctCount / totalQuestions) * 100;
         let remarks = '';
         if (scorePercentage >= 80) {
@@ -302,12 +396,12 @@ document.addEventListener('DOMContentLoaded', () => {
         quizRemarksSpan.textContent = remarks;
 
         quizResultDiv.classList.remove('hidden');
-        submitQuizBtn.classList.add('hidden'); // Hide submit button after submission
-        quizQuestionsDiv.innerHTML = ''; // Clear questions after showing results
+        submitQuizBtn.classList.add('hidden');
+        quizQuestionsDiv.innerHTML = '';
         quizResultDiv.scrollIntoView({ behavior: 'smooth' });
     });
 
 
-    // Initially show the home section
+    // --- Initial Setup ---
     showSection('home');
 });
