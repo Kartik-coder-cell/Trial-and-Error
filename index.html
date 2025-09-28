@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Readiness Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Placement Tracker</div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+                <li><a href="#help">Help</a></li>
+                <li class="auth-buttons">
+                    <button id="loginBtn">Login</button>
+                    <button id="signupBtn">Sign Up</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <h1>Track Your Placement Readiness</h1>
+            <p>Assess your skills in CGPA, Aptitude, DSA, and Communication to ace your placements!</p>
+            <button class="cta-button">Get Started</button>
+        </section>
+
+        <section id="dashboard" class="hidden">
+            <h2>Student Dashboard</h2>
+            <form id="studentDataForm">
+                <h3>Enter Student Details:</h3>
+                <label for="studentName">Name:</label>
+                <input type="text" id="studentName" required>
+
+                <label for="yearOfStudy">Year of Study:</label>
+                <input type="number" id="yearOfStudy" min="1" max="4" required>
+
+                <label for="cgpa">CGPA:</label>
+                <input type="number" id="cgpa" step="0.01" min="0" max="10" required>
+
+                <h4>Skill Assessments:</h4>
+                <label for="expertiseQuiz">Expertise Quiz Score (out of 100):</label>
+                <input type="number" id="expertiseQuiz" min="0" max="100" required>
+
+                <label for="communicationQuiz">Communication Quiz Score (out of 100):</label>
+                <input type="number" id="communicationQuiz" min="0" max="100" required>
+
+                <label for="dsaTopicsCovered">DSA Topics Covered (e.g., Arrays, Trees, Graphs):</label>
+                <input type="text" id="dsaTopicsCovered" placeholder="Comma separated values">
+
+                <label for="dsaQuiz">DSA Quiz Score (out of 100):</label>
+                <input type="number" id="dsaQuiz" min="0" max="100" required>
+
+                <label for="aptitudeTest">Aptitude Test Score (out of 100):</label>
+                <input type="number" id="aptitudeTest" min="0" max="100" required>
+
+                <button type="submit">Calculate Readiness</button>
+            </form>
+
+            <div id="readinessResult" class="hidden">
+                <h3>Placement Readiness Report for <span id="reportStudentName"></span>:</h3>
+                <p>Overall Readiness: <strong id="overallReadiness"></strong></p>
+                <p>Areas for Improvement: <span id="improvementAreas"></span></p>
+                <div class="score-breakdown">
+                    <p>CGPA: <span id="resultCGPA"></span></p>
+                    <p>Aptitude: <span id="resultAptitude"></span></p>
+                    <p>DSA: <span id="resultDSA"></span></p>
+                    <p>Communication: <span id="resultCommunication"></span></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="hidden">
+            <h2>About Us</h2>
+            <p>This project helps students identify their strengths and weaknesses for campus placements.</p>
+        </section>
+
+        <section id="contact" class="hidden">
+            <h2>Contact Us</h2>
+            <p>Have questions? Reach out to us at support@placementtracker.com</p>
+        </section>
+
+        <section id="help" class="hidden">
+            <h2>Help</h2>
+            <p>Find answers to common questions here.</p>
+            <ul>
+                <li>How to use the tracker?</li>
+                <li>What do the scores mean?</li>
+            </ul>
+        </section>
+
+        <div id="loginModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" required>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="signupModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Sign Up</h2>
+                <form id="signupForm">
+                    <label for="signupName">Name:</label>
+                    <input type="text" id="signupName" required>
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" required>
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" required>
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" required>
+                    <button type="submit">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Placement Readiness Tracker</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
